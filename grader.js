@@ -34,10 +34,15 @@ var checkHtmlFile = function(htmlfile, checksfile) {
     return out;
 };
 
+var clone = function(fn) {
+    // http://stackoverflow.com/a/6772648
+    return fn.bind({});
+};
+
 if(require.main == module) {
     program
-	.option('-c, --checks ', 'Path to checks.json', assertFileExists, CHECKSFIL_DEFAULT)
-	.option('-f, --file ', 'Path to index.html', assertFileExists, HTMLFILE_DEFAULT)
+	.option('-c, --checks <checks_file>', 'Path to checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
+	.option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
 	.parse(process.argv);
     var checkJson = checkHtmlFile(program.file, program.checks);
     var outJson = JSON.stringify(checkJson, null, 4);
